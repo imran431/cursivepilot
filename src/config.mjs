@@ -5,7 +5,7 @@ export const site = {
   description: 'Free browser-based tools for cursive text, handwriting images, calligraphy, signatures and printable handwriting worksheets.',
   language: 'en',
   themeColor: '#16382f',
-  email: process.env.CONTACT_EMAIL || 'support@yourdomain.com',
+  email: process.env.CONTACT_EMAIL || '',
 };
 
 export const nav = [
