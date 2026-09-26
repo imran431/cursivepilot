@@ -10,9 +10,10 @@ CursivePilot is a static-first cursive and handwriting tools site built for GitH
 - Cursive Signature / Name Generator
 - Handwriting Worksheet Generator
 - Cursive alphabet reference
+- Cursive Text Compatibility Lab
 - SEO-focused supporting guides
 
-The core tools run in the visitor's browser using JavaScript, Unicode and Canvas. No database is required for V1.
+The core tools run in the visitor's browser using JavaScript, Unicode and Canvas. No database is required for V1. The cursive tool includes searchable style categories and browser-local favorites, and the compatibility lab supports transparent real-app testing.
 
 ## Run locally
 
