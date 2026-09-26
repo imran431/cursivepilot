@@ -1,0 +1,16 @@
+{
+  "name": "cursivepilot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Static-first cursive, handwriting, calligraphy, signature and worksheet tools for Netlify + Supabase.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev-server.mjs",
+    "check": "node scripts/check.mjs",
+    "validate:seo": "node scripts/check.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
