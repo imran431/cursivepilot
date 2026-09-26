@@ -29,25 +29,33 @@ for (const file of htmlFiles) {
   const desc = html.match(/<meta name="description" content="([^"]+)"/)?.[1];
   const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
   const h1Count = (html.match(/<h1[\s>]/g) || []).length;
+
   if (!title) errors.push(`${relative}: missing title`);
   if (!desc) errors.push(`${relative}: missing meta description`);
   if (!canonical) errors.push(`${relative}: missing canonical`);
   if (h1Count !== 1) errors.push(`${relative}: expected 1 h1, found ${h1Count}`);
+
   if (title) {
     if (titles.has(title)) errors.push(`${relative}: duplicate title with ${titles.get(title)}`);
     titles.set(title, relative);
   }
+
   if (canonical) {
     if (canonicals.has(canonical)) errors.push(`${relative}: duplicate canonical ${canonical}`);
     canonicals.add(canonical);
   }
-  const refs = [...html.matchAll(/(?:href|src)="(\/[^"]*)"/g)].map((m) => m[1].split('#')[0].split('?')[0]).filter(Boolean);
+
+  const refs = [...html.matchAll(/(?:href|src)="(\/[^"]*)"/g)]
+    .map((m) => m[1].split('#')[0].split('?')[0])
+    .filter(Boolean);
+
   for (const href of refs) {
     if (href === '/sitemap.xml') continue;
     let target;
     if (href === '/') target = path.join(dist, 'index.html');
     else if (href.endsWith('/')) target = path.join(dist, href.replace(/^\//,''), 'index.html');
     else target = path.join(dist, href.replace(/^\//,''));
+
     const match = files.some((f) => f === target || f === `${target}.html`);
     if (!match) errors.push(`${relative}: broken internal resource ${href}`);
   }
@@ -56,24 +64,37 @@ for (const file of htmlFiles) {
 const robots = await readFile(path.join(dist,'robots.txt'),'utf8');
 if (!robots.includes('OAI-SearchBot')) errors.push('robots.txt missing OAI-SearchBot');
 if (!robots.includes('Sitemap:')) errors.push('robots.txt missing sitemap');
+
 const sitemap = await readFile(path.join(dist,'sitemap.xml'),'utf8');
 if (!sitemap.includes('<urlset')) errors.push('sitemap.xml invalid');
 if (sitemap.includes('/thanks/')) errors.push('sitemap.xml must not include noindex /thanks/');
+if (sitemap.includes('<lastmod>')) warnings.push('sitemap includes lastmod; keep it only if dates are accurate.');
 
 const unicode = await readFile(path.join(root,'src','client','unicode.js'),'utf8');
 for (const label of ['script','bold-script','fraktur','double','sans','mono','fullwidth','circled']) {
-  if (!unicode.includes(`id: '${label}'`)) errors.push(`unicode.js missing style ${label}`);
+  if (!unicode.includes(`id:'${label}'`) && !unicode.includes(`id: '${label}'`)) {
+    errors.push(`unicode.js missing style ${label}`);
+  }
 }
 
 const config = await readFile(path.join(root,'src','config.mjs'),'utf8');
-if (!process.env.CONTACT_EMAIL) warnings.push('CONTACT_EMAIL is not set; Netlify Forms still works but no support email will be displayed.');
+if (!process.env.CONTACT_EMAIL) {
+  warnings.push('CONTACT_EMAIL is not set; Netlify Forms still works but no support email will be displayed.');
+}
+if (config.includes('support@yourdomain.com') || config.includes('example.com')) {
+  errors.push('Placeholder contact email remains in source.');
+}
+
+for (const asset of ['favicon-48x48.png','favicon.ico','apple-touch-icon.png','og-card.png']) {
+  if (!files.includes(path.join(dist, asset))) errors.push(`missing production asset: ${asset}`);
+}
 
 if (errors.length) {
-  console.error('
-CHECK FAILED');
+  console.error('\nCHECK FAILED');
   errors.forEach((e) => console.error(`- ${e}`));
   process.exitCode = 1;
 } else {
   console.log(`SEO/build checks passed: ${htmlFiles.length} HTML files, unique titles/canonicals, internal links resolved.`);
 }
+
 warnings.forEach((w) => console.warn(`Warning: ${w}`));
