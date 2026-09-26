@@ -47,8 +47,18 @@ const notFound = renderPage({
 });
 await writeFile(path.join(dist, '404.html'), notFound, 'utf8');
 
-const sitemapUrls = pages\n  .filter((page) => !page.noindex)\n  .map((page) => `  <url>\n    <loc>${new URL(page.path, baseUrl).toString()}</loc>\n  </url>`)\n  .join('\n');
-await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls}\n</urlset>\n`, 'utf8');
+const sitemapUrls = pages
+  .filter((page) => !page.noindex)
+  .map((page) => `  <url>
+    <loc>${new URL(page.path, baseUrl).toString()}</loc>
+  </url>`)
+  .join('
+');
+await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapUrls}
+</urlset>
+`, 'utf8');
 
 await writeFile(path.join(dist, 'robots.txt'), `# Search engines
 User-agent: Googlebot
@@ -88,7 +98,8 @@ const llmLines = [
   'The site distinguishes copyable Unicode text from rendered handwriting or calligraphy images. The included version does not claim to clone a specific person\'s handwriting with AI.',
   '',
 ];
-await writeFile(path.join(dist, 'llms.txt'), llmLines.join('\n'), 'utf8');
+await writeFile(path.join(dist, 'llms.txt'), llmLines.join('
+'), 'utf8');
 
 console.log(`Built ${pages.length} pages into ${dist}`);
 console.log(`Canonical base: ${baseUrl}`);
