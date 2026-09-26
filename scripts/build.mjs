@@ -47,7 +47,7 @@ const notFound = renderPage({
 });
 await writeFile(path.join(dist, '404.html'), notFound, 'utf8');
 
-const sitemapUrls = pages.map((page) => `  <url>\n    <loc>${new URL(page.path, baseUrl).toString()}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`).join('\n');
+const sitemapUrls = pages\n  .filter((page) => !page.noindex)\n  .map((page) => `  <url>\n    <loc>${new URL(page.path, baseUrl).toString()}</loc>\n  </url>`)\n  .join('\n');
 await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls}\n</urlset>\n`, 'utf8');
 
 await writeFile(path.join(dist, 'robots.txt'), `# Search engines
