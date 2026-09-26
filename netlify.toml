@@ -11,6 +11,11 @@
   to = "/.netlify/functions/feedback"
   status = 200
 
+[[redirects]]
+  from = "/og-card.png"
+  to = "/og-card.svg"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]
