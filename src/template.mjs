@@ -30,30 +30,36 @@ function breadcrumbSchema(baseUrl, breadcrumbs = []) {
   };
 }
 
-function pageSchemas({ baseUrl, path, title, description, type, features = [], breadcrumbs = [], faqs = [] }) {
+function pageSchemas({ baseUrl, path, title, description, type, features = [], breadcrumbs = [], published = '', modified = '' }) {
   const url = cleanUrl(baseUrl, path);
-  const schemas = [
-    {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: site.name,
-      url: cleanUrl(baseUrl, '/'),
-      description: site.description,
-    },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: site.name,
-      url: cleanUrl(baseUrl, '/'),
-      description: site.description,
-      inLanguage: site.language,
-    },
-  ];
+  const schemas = [];
+
+  if (path === '/') {
+    schemas.push(
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: site.name,
+        alternateName: 'Cursive Pilot',
+        url: cleanUrl(baseUrl, '/'),
+        description: site.description,
+        inLanguage: site.language,
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: site.name,
+        url: cleanUrl(baseUrl, '/'),
+        description: site.description,
+        logo: cleanUrl(baseUrl, '/apple-touch-icon.png'),
+      },
+    );
+  }
 
   if (type === 'tool') {
     schemas.push({
       '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
+      '@type': 'WebApplication',
       name: title.split(' | ')[0],
       description,
       url,
@@ -83,9 +89,12 @@ function pageSchemas({ baseUrl, path, title, description, type, features = [], b
       description,
       mainEntityOfPage: url,
       inLanguage: site.language,
+      ...(published ? { datePublished: published } : {}),
+      ...(modified ? { dateModified: modified } : {}),
       author: {
         '@type': 'Organization',
-        name: site.name,
+        name: `${site.name} Editorial`,
+        url: cleanUrl(baseUrl, '/about/'),
       },
       publisher: {
         '@type': 'Organization',
@@ -94,17 +103,6 @@ function pageSchemas({ baseUrl, path, title, description, type, features = [], b
     });
   }
 
-  if (faqs.length) {
-    schemas.push({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: faqs.map(([question, answer]) => ({
-        '@type': 'Question',
-        name: question,
-        acceptedAnswer: { '@type': 'Answer', text: answer },
-      })),
-    });
-  }
 
   const breadcrumb = breadcrumbSchema(baseUrl, breadcrumbs);
   if (breadcrumb) schemas.push(breadcrumb);
@@ -133,10 +131,12 @@ export function renderPage({
   script = '',
   noindex = false,
   faqs = [],
+  published = '',
+  modified = '',
   fontQuery = '',
 }) {
   const canonical = cleanUrl(baseUrl, path);
-  const schemas = pageSchemas({ baseUrl, path, title, description, type, features, breadcrumbs, faqs });
+  const schemas = pageSchemas({ baseUrl, path, title, description, type, features, breadcrumbs, published, modified });
   const googleVerify = process.env.GOOGLE_SITE_VERIFICATION || '';
   const bingVerify = process.env.BING_SITE_VERIFICATION || '';
   const gtmId = /^GTM-[A-Z0-9]+$/i.test(process.env.GTM_ID || '') ? process.env.GTM_ID : '';
@@ -161,10 +161,17 @@ export function renderPage({
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="${canonical}">
   <meta property="og:image" content="${cleanUrl(baseUrl, '/og-card.png')}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
+  <meta name="twitter:image" content="${cleanUrl(baseUrl, '/og-card.png')}">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <link rel="manifest" href="/site.webmanifest">
   ${fontQuery ? `<link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
