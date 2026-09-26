@@ -80,33 +80,22 @@ Track meaningful actions such as:
 
 The browser scripts push these events to `window.dataLayer` so they can later be mapped in Google Tag Manager / GA4 / Google Ads.
 
-## Content quality principles
-
-- Build for one clear topic.
-- Do not publish thin keyword-doorway pages.
-- Explain the difference between Unicode cursive and rendered script fonts.
-- Give users useful output before long SEO copy.
-- Make privacy and limitations clear.
-- Use internal links only where the next tool genuinely helps.
-- Expand into new keyword pages only when the product has a distinct feature for that intent.
-
 ## Backend recommendation
 
 Use a static-first architecture:
 - GitHub: source control
-- Netlify: static hosting, builds and serverless functions
-- Supabase: optional persistent data such as contact messages
+- Netlify: static hosting, builds and Netlify Forms
+- Browser: all core generation logic
 
-The generators run in the browser. Supabase is intentionally not required for core generation, which keeps the site fast and reduces backend cost.
+No database is required for V1.
 
 ## Launch order
 
 1. Choose final brand and domain.
 2. Set production environment variables.
 3. Connect GitHub to Netlify.
-4. Run the Supabase schema only if the contact form is enabled.
-5. Deploy.
-6. Verify Search Console and submit sitemap.
-7. Test each tool on mobile and desktop.
-8. Add analytics/ads only after privacy and consent setup is ready.
-9. Use Search Console query data to decide which supporting pages to expand next.
+4. Deploy.
+5. Verify Search Console and submit sitemap.
+6. Test each tool on mobile and desktop.
+7. Add analytics/ads only after privacy and consent setup is ready.
+8. Use Search Console query data to decide which supporting pages to expand next.
