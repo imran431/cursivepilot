@@ -9,10 +9,10 @@
 
 ## Netlify
 - [ ] Set `SITE_URL` to the final HTTPS domain.
-- [ ] Add Supabase variables only if using the contact form.
 - [ ] Add `GTM_ID` only when tracking/consent is ready.
 - [ ] Confirm the custom domain is primary and HTTPS works.
 - [ ] Confirm `/robots.txt` and `/sitemap.xml` return HTTP 200.
+- [ ] Submit the contact form once and confirm it appears in Netlify Forms.
 
 ## Google Search
 - [ ] Verify Search Console.
@@ -42,4 +42,3 @@
 - [ ] Test Unicode copy/paste in the platforms you mention publicly.
 - [ ] Test PNG downloads.
 - [ ] Test Print/Save PDF for A4 and US Letter.
-- [ ] Confirm contact-form submissions reach Supabase.
