@@ -158,7 +158,7 @@ const howItWorks={
  path:'/how-it-works/',title:`How ${site.name} Works – Privacy, Output Types & Limits`,
  description:`Learn how ${site.name} creates copyable cursive, handwriting, calligraphy, signatures and worksheets.`,
  breadcrumbs:crumbs('How It Works','/how-it-works/'),
- content:`<section class="section"><div class="shell content-grid"><article class="article"><span class="eyebrow">Transparent by design</span><h1>How the tools work</h1><p class="lede">The site separates copyable Unicode from rendered visual lettering so you know exactly what output you are creating.</p><h2>Browser-side processing</h2><p>Cursive conversion uses JavaScript character mapping. Handwriting, calligraphy, signature and worksheet tools draw onto HTML canvas elements.</p><h2>Web fonts</h2><p>Visual tools may request font files from Google Fonts. You can replace them with self-hosted or system fonts if your deployment requires it.</p><h2>About AI claims</h2><p>This version does not claim to clone real handwriting with AI. If a machine-learning feature is added later, describe exactly what it does.</p><h2>Stored data</h2><p>The optional contact form can send submitted messages to a Netlify Function and Supabase. The generators themselves do not require an account.</p></article><aside class="aside-card"><h2>Policies</h2><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></aside></div></section>`
+ content:`<section class="section"><div class="shell content-grid"><article class="article"><span class="eyebrow">Transparent by design</span><h1>How the tools work</h1><p class="lede">The site separates copyable Unicode from rendered visual lettering so you know exactly what output you are creating.</p><h2>Browser-side processing</h2><p>Cursive conversion uses JavaScript character mapping. Handwriting, calligraphy, signature and worksheet tools draw onto HTML canvas elements.</p><h2>Web fonts</h2><p>Visual tools may request font files from Google Fonts. You can replace them with self-hosted or system fonts if your deployment requires it.</p><h2>About AI claims</h2><p>This version does not claim to clone real handwriting with AI. If a machine-learning feature is added later, describe exactly what it does.</p><h2>Stored data</h2><p>The generators themselves do not require an account or database. If you submit the optional contact form, Netlify Forms processes that submission for the site owner.</p></article><aside class="aside-card"><h2>Policies</h2><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></aside></div></section>`
 };
 
 const about={
@@ -172,7 +172,7 @@ const privacy={
  path:'/privacy/',title:`Privacy Policy | ${site.name}`,
  description:`Privacy information for ${site.name}, including browser-side processing, web font requests and contact form data.`,
  breadcrumbs:crumbs('Privacy','/privacy/'),
- content:`<section class="section"><div class="shell"><h1>Privacy Policy</h1><p class="lede">Update this starter policy before public launch to match your final analytics, advertising and legal requirements.</p><h2>Generator input</h2><p>The included generators process their main input in the browser and do not send generator text to a model API.</p><h2>Contact form</h2><p>If submitted, the contact form can store email, message, page path and submission time in Supabase.</p><h2>Analytics and advertising</h2><p>No Google Analytics or advertising tag is installed by default. If you add one, update this policy and implement any required consent controls.</p></div></section>`
+ content:`<section class="section"><div class="shell"><h1>Privacy Policy</h1><p class="lede">Update this starter policy before public launch to match your final analytics, advertising and legal requirements.</p><h2>Generator input</h2><p>The included generators process their main input in the browser and do not send generator text to a model API.</p><h2>Contact form</h2><p>If you submit the contact form, the form fields are sent to Netlify Forms so the site owner can receive and review the message.</p><h2>Analytics and advertising</h2><p>No Google Analytics or advertising tag is installed by default. If you add one, update this policy and implement any required consent controls.</p></div></section>`
 };
 
 const terms={
@@ -185,8 +185,16 @@ const terms={
 const contact={
  path:'/contact/',title:`Contact ${site.name}`,
  description:`Contact ${site.name} with a bug report, compatibility issue or feature suggestion.`,
- breadcrumbs:crumbs('Contact','/contact/'),script:'/assets/feedback.js',
- content:`<section class="section"><div class="shell contact-grid"><div><span class="eyebrow">Contact</span><h1>Tell us what should work better</h1><p class="lede">Send a concise bug report or feature suggestion.</p><p>Support email: <strong>${site.email}</strong></p></div><form class="form-card" data-feedback-form><div class="honeypot" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div><div class="field"><label for="contact-email">Email (optional)</label><input id="contact-email" name="email" type="email" maxlength="200"></div><div class="field" style="margin-top:14px"><label for="contact-message">Message</label><textarea id="contact-message" name="message" minlength="10" maxlength="4000" required></textarea></div><button class="button button-primary" style="margin-top:14px" type="submit">Send message</button><p class="status" data-status></p></form></div></section>`
+ breadcrumbs:crumbs('Contact','/contact/'),
+ content:`<section class="section"><div class="shell contact-grid"><div><span class="eyebrow">Contact</span><h1>Tell us what should work better</h1><p class="lede">Send a concise bug report or feature suggestion.</p><p>Support email: <strong>${site.email}</strong></p></div><form class="form-card" name="contact" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="website"><input type="hidden" name="form-name" value="contact"><div class="honeypot" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div><div class="field"><label for="contact-email">Email (optional)</label><input id="contact-email" name="email" type="email" maxlength="200"></div><div class="field" style="margin-top:14px"><label for="contact-message">Message</label><textarea id="contact-message" name="message" minlength="10" maxlength="4000" required></textarea></div><button class="button button-primary" style="margin-top:14px" type="submit">Send message</button><p class="helper">This form is handled by Netlify Forms. No account is required.</p></form></div></section>`
 };
 
-export const pages=[home,cursive,handwriting,calligraphy,signature,worksheet,alphabet,guideUnicode,guidePractice,howItWorks,about,privacy,terms,contact];
+const thanks={
+ path:'/thanks/',title:`Message Sent | ${site.name}`,
+ description:'Thanks for contacting CursivePilot.',
+ noindex:true,
+ breadcrumbs:crumbs('Message Sent','/thanks/'),
+ content:`<section class="section"><div class="shell"><span class="eyebrow">Message sent</span><h1>Thanks for the feedback.</h1><p class="lede">Your message was submitted successfully.</p><div class="hero-actions"><a class="button button-primary" href="/cursive-generator/">Back to Cursive Generator</a><a class="button button-secondary" href="/">Home</a></div></div></section>`
+};
+
+export const pages=[home,cursive,handwriting,calligraphy,signature,worksheet,alphabet,guideUnicode,guidePractice,howItWorks,about,privacy,terms,contact,thanks];
