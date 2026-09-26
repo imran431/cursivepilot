@@ -2,11 +2,6 @@
   command = "npm run build"
   publish = "dist"
 
-[[redirects]]
-  from = "/og-card.png"
-  to = "/og-card.svg"
-  status = 301
-
 [[headers]]
   for = "/*"
   [headers.values]
