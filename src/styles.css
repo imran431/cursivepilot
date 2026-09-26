@@ -274,3 +274,30 @@ details p { color: var(--ink-soft); }
   .preview-stage { background: white; padding: 0; overflow: visible; min-height: 0; }
   .preview-stage canvas { box-shadow: none; max-width: 100%; }
 }
+
+
+/* Searchable cursive library, static examples, and compatibility lab */
+.style-toolbar { display:grid; grid-template-columns:minmax(0,1fr) 210px auto; gap:12px; align-items:end; margin-top:18px; }
+.favorite-filter { display:flex; gap:8px; align-items:center; min-height:44px; font-size:.88rem; color:var(--ink-soft); }
+.style-summary { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin:12px 0 4px; color:#66776f; font-size:.8rem; }
+.style-meta { min-width:0; }
+.style-category { margin-top:3px; color:#7b8781; font-size:.72rem; }
+.style-actions { display:flex; align-items:center; gap:8px; }
+.favorite-button { width:38px; height:38px; border:1px solid var(--line-strong); background:#fff; color:var(--gold); border-radius:10px; font-size:1.15rem; }
+.empty-state { margin:0; padding:18px; border:1px dashed var(--line-strong); border-radius:12px; color:var(--ink-soft); }
+.example-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.example-card { display:grid; gap:8px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; }
+.example-card strong { color:var(--ink-soft); font-size:.78rem; text-transform:uppercase; letter-spacing:.04em; }
+.example-card span { font-size:1.2rem; overflow-wrap:anywhere; }
+.article-meta { color:#6d7c75 !important; font-size:.88rem; }
+.compat-output { margin:18px 0 14px; padding:18px; border:1px solid var(--line); border-radius:14px; background:#fefefd; font-size:1.55rem; overflow-wrap:anywhere; }
+.preview-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
+.platform-preview { display:grid; gap:8px; min-height:110px; padding:16px; border:1px solid var(--line); border-radius:14px; background:#fff; }
+.platform-preview strong { font-size:.78rem; color:var(--ink-soft); }
+.platform-preview span { font-size:1.1rem; overflow-wrap:anywhere; }
+
+@media (max-width: 720px) {
+  .style-toolbar, .example-grid, .preview-grid { grid-template-columns:1fr; }
+  .style-result { grid-template-columns:1fr; }
+  .style-actions { justify-content:flex-start; }
+}
