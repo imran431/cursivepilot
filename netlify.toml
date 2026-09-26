@@ -1,15 +1,6 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  functions = "netlify/functions"
-
-[functions]
-  node_bundler = "esbuild"
-
-[[redirects]]
-  from = "/api/feedback"
-  to = "/.netlify/functions/feedback"
-  status = 200
 
 [[redirects]]
   from = "/og-card.png"
