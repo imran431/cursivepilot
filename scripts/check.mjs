@@ -57,7 +57,7 @@ const robots = await readFile(path.join(dist,'robots.txt'),'utf8');
 if (!robots.includes('OAI-SearchBot')) errors.push('robots.txt missing OAI-SearchBot');
 if (!robots.includes('Sitemap:')) errors.push('robots.txt missing sitemap');
 const sitemap = await readFile(path.join(dist,'sitemap.xml'),'utf8');
-if (!sitemap.includes('<urlset')) errors.push('sitemap.xml invalid');
+if (!sitemap.includes('<urlset')) errors.push('sitemap.xml invalid');\nif (sitemap.includes('/thanks/')) errors.push('sitemap.xml must not include noindex /thanks/');
 
 const unicode = await readFile(path.join(root,'src','client','unicode.js'),'utf8');
 for (const label of ['script','bold-script','fraktur','double','sans','mono','fullwidth','circled']) {
@@ -65,7 +65,7 @@ for (const label of ['script','bold-script','fraktur','double','sans','mono','fu
 }
 
 const config = await readFile(path.join(root,'src','config.mjs'),'utf8');
-if (!process.env.CONTACT_EMAIL && (config.includes('yourdomain.com') || config.includes('example.com'))) warnings.push('Replace the placeholder contact email before public launch.');
+if (!process.env.CONTACT_EMAIL) warnings.push('CONTACT_EMAIL is not set; Netlify Forms still works but no support email will be displayed.');
 
 if (errors.length) {
   console.error('\nCHECK FAILED');
