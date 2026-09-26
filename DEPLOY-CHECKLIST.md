@@ -15,9 +15,10 @@
 - [ ] Submit the contact form once and confirm it appears in Netlify Forms.
 
 ## Google Search
+- [ ] Prefer a final custom domain before serious backlink or ad campaigns; if you stay on the Netlify hostname, keep SITE_URL aligned with it.
 - [ ] Verify Search Console.
 - [ ] Submit `/sitemap.xml`.
-- [ ] Inspect the five main tool URLs.
+- [ ] Inspect the main tool URLs, including /cursive-generator/ and /cursive-text-compatibility/.
 - [ ] Run Rich Results Test on a tool page.
 - [ ] Run PageSpeed Insights on mobile and desktop.
 - [ ] Check that canonical URLs use the production domain.
