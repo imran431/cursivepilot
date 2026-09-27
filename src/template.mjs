@@ -176,7 +176,7 @@ export function renderPage({
   ${fontQuery ? `<link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?${fontQuery}&display=swap" rel="stylesheet">` : ''}
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/styles.css?v=20260927-3">
   ${gtmHead}
   ${schemas.map((schema) => `<script type="application/ld+json">${JSON.stringify(schema).replaceAll('<', '\\u003c')}</script>`).join('\n  ')}
 </head>
@@ -222,8 +222,8 @@ export function renderPage({
     </div>
     <div class="shell footer-bottom"><span>© <span data-current-year></span> ${site.name}</span><span>Free browser-based writing tools.</span></div>
   </footer>
-  <script type="module" src="/assets/site.js"></script>
-  ${script ? `<script type="module" src="${script}"></script>` : ''}
+  <script type="module" src="/assets/site.js?v=20260927-3"></script>
+  ${script ? `<script type="module" src="${script}?v=20260927-3"></script>` : ''}
 </body>
 </html>`;
 }
