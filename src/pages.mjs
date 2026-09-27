@@ -106,28 +106,43 @@ const signature={
 };
 
 const worksheetFaq=[
- ['Can I make my own practice sheet?','Yes. Enter one phrase per line and choose cursive or print plus trace, copy or mixed mode.'],
- ['Can I save worksheets as PDF?','Use Print / Save PDF for all generated pages.']
+ ['Can I add a student name and date?','Yes. Both are optional. If provided, they appear in the worksheet header. The date defaults to today and can be changed or cleared.'],
+ ['What does Trace + Practice do?','The first row contains faint tracing text and the remaining rows stay blank for independent practice, avoiding unnecessary repeated dark examples.'],
+ ['Can I make more than one page?','Yes. Add one practice item per line. Use Previous and Next to inspect every generated page, then Print / Save PDF to save all pages together.'],
+ ['Can I download a PNG?','Yes. The PNG button downloads the page currently visible in the preview. Print / Save PDF includes every generated page.']
 ];
 const worksheet={
  path:'/handwriting-worksheet-generator/',type:'tool',script:'/assets/worksheet.js',
- fontQuery:'family=Dancing+Script:wght@400..700&family=Patrick+Hand',
+ fontQuery:'family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Homemade+Apple&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Satisfy',
  title:`Handwriting Worksheet Generator – Cursive & Tracing Sheets | ${site.name}`,
- description:'Create printable handwriting practice worksheets from your own words. Choose cursive or print and save as PNG or PDF.',
- features:['Custom phrases','Cursive or print','Trace, copy and mixed modes','Guide lines','A4 and US Letter','PNG and print/PDF'],
+ description:'Create printable handwriting worksheets with custom text, optional student name and date, trace-and-practice rows, page navigation, PNG and PDF export.',
+ features:['Custom practice phrases','Optional student name and date','Cursive or print writing','Multiple handwriting styles','Trace and independent practice modes','2 to 4 rows per item','Multi-page preview','PNG and print/PDF export'],
  breadcrumbs:crumbs('Worksheet Generator','/handwriting-worksheet-generator/'),faqs:worksheetFaq,
- content:`<section class="tool-shell"><div class="shell"><div class="tool-intro"><span class="eyebrow">Printable practice</span><h1>Handwriting Worksheet Generator</h1><p class="lede">Create practice sheets from your own names, words or sentences.</p></div><div class="tool-panel" data-worksheet-tool><div class="tool-panel-head"><h2>Build a practice worksheet</h2><span class="privacy-note">● Runs locally</span></div><div class="tool-body"><div class="canvas-layout"><div class="settings-panel">
+ content:`<section class="tool-shell"><div class="shell"><div class="tool-intro"><span class="eyebrow">Printable practice</span><h1>Handwriting Worksheet Generator</h1><p class="lede">Create clean handwriting practice sheets from your own names, words or sentences. Add optional student details, choose cursive or print, and preview every page before printing.</p></div><div class="tool-panel" data-worksheet-tool><div class="tool-panel-head"><h2>Build a practice worksheet</h2><span class="privacy-note">● Runs locally</span></div><div class="tool-body"><div class="canvas-layout"><div class="settings-panel">
  <div class="field field-full"><label for="ws-title">Worksheet title</label><input id="ws-title" data-title type="text" maxlength="50" value="Handwriting Practice"></div>
- <div class="field field-full"><label for="ws-text">Practice text — one item per line</label><textarea id="ws-text" data-text>My name is Alex
+ <div class="field"><label for="ws-student">Student name <span class="helper">(optional)</span></label><input id="ws-student" data-student-name type="text" maxlength="60" placeholder="e.g. Alex Smith"></div>
+ <div class="field"><label for="ws-date">Date <span class="helper">(optional)</span></label><input id="ws-date" data-date type="date"></div>
+ <div class="field field-full"><label for="ws-text">Practice text — one item per line</label><textarea id="ws-text" data-text maxlength="2500">Beautiful writing
 Practice makes progress
-Write slowly and clearly
-The quick brown fox</textarea></div>
- <div class="field"><label for="ws-script">Writing style</label><select id="ws-script" data-script><option value="cursive">Cursive</option><option value="print">Print</option></select></div>
- <div class="field"><label for="ws-mode">Practice mode</label><select id="ws-mode" data-mode><option value="mixed">Trace + copy</option><option value="trace">Trace</option><option value="copy">Copy</option></select></div>
+Slow and steady
+The quick brown fox</textarea><span class="helper">Up to 24 practice items. Each non-empty line becomes one worksheet item.</span></div>
+ <div class="field"><label for="ws-script">Writing type</label><select id="ws-script" data-script><option value="cursive">Cursive</option><option value="print">Print</option></select></div>
+ <div class="field"><label for="ws-font">Handwriting style</label><select id="ws-font" data-font></select></div>
+ <div class="field"><label for="ws-mode">Practice mode</label><select id="ws-mode" data-mode><option value="mixed" selected>Trace + Practice</option><option value="trace">Trace every row</option><option value="copy">Copy from model</option></select></div>
+ <div class="field"><label for="ws-rows">Rows per item</label><select id="ws-rows" data-rows><option value="2">2 rows</option><option value="3" selected>3 rows</option><option value="4">4 rows</option></select></div>
  <div class="field"><label for="ws-page">Page size</label><select id="ws-page" data-page-size><option value="letter">US Letter</option><option value="a4">A4</option></select></div>
- <div class="control-row field-full"><button class="button button-primary" type="button" data-download-png>Download page 1 PNG</button><button class="button button-secondary" type="button" data-print>Print / Save PDF</button></div><p class="status field-full" data-status></p></div>
- <div><div class="preview-stage" data-preview></div><p class="preview-caption" data-preview-caption></p></div></div></div></div></div></section>
- <section class="section"><div class="shell content-grid"><article class="article"><h2>Custom handwriting practice</h2><p>Create trace, copy or mixed practice rows from the exact words a learner needs.</p><h2>Printing tips</h2><p>Use Print / Save PDF, choose the correct page size and review the printer preview before printing.</p><h2>FAQ</h2>${faqHtml(worksheetFaq)}</article><aside class="aside-card"><h2>Related</h2><a href="/cursive-alphabet/">Cursive alphabet</a><a href="/guides/how-to-practice-cursive/">Practice guide</a></aside></div></section>`
+ <div class="control-row field-full"><button class="button button-primary" type="button" data-download-png>Download current page PNG</button><button class="button button-secondary" type="button" data-print>Print / Save all pages PDF</button></div>
+ <p class="status field-full" data-status aria-live="polite"></p></div>
+ <div class="worksheet-preview-wrap">
+  <div class="worksheet-preview-toolbar" aria-label="Worksheet page navigation">
+   <button class="button button-secondary button-small" type="button" data-prev-page>← Previous</button>
+   <strong data-page-indicator>Page 1 of 1</strong>
+   <button class="button button-secondary button-small" type="button" data-next-page>Next →</button>
+  </div>
+  <div class="preview-stage" data-preview></div>
+  <p class="preview-caption" data-preview-caption></p>
+ </div></div></div></div></div></section>
+ <section class="section"><div class="shell content-grid"><article class="article"><h2>Build a worksheet that separates tracing from independent writing</h2><p>The default <strong>Trace + Practice</strong> mode gives each item one faint tracing row followed by blank rows. That keeps the model visible without printing the same phrase repeatedly in dark handwriting.</p><h2>Add your own student details</h2><p>Student name and date are optional. If you fill them in, they appear in the worksheet header. If the name is left blank, the worksheet keeps a blank line so it can be completed by hand.</p><h2>Preview every generated page</h2><p>Longer lists automatically create more pages. Use Previous and Next to inspect each page. PNG export saves the page currently shown, while Print / Save PDF includes the entire worksheet.</p><h2>Choose cursive or print</h2><p>Cursive includes several script-style options, while Print uses more separated handwriting forms. The result is designed for general practice and is not tied to one school handwriting curriculum.</p><h2>FAQ</h2>${faqHtml(worksheetFaq)}</article><aside class="aside-card"><h2>Related</h2><a href="/cursive-alphabet/">Cursive alphabet</a><a href="/guides/how-to-practice-cursive/">Practice guide</a><a href="/handwriting-generator/">Handwriting generator</a></aside></div></section>`
 };
 
 const alphabetLetters=[...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map((letter)=>`<div class="alpha-card"><div class="alpha-script">${letter}${letter.toLowerCase()}</div><div class="alpha-plain">${letter} ${letter.toLowerCase()}</div></div>`).join('');
