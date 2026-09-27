@@ -124,7 +124,22 @@ export const styleDefs = [
   { id:'stars', name:'Star Frame', category:'Decorative', tags:['star','sparkle'], transform:(text)=>surround(text,'✦ ',' ✦') },
   { id:'sparkles', name:'Sparkle Frame', category:'Decorative', tags:['sparkle','cute'], transform:(text)=>surround(text,'✨ ',' ✨') },
   { id:'hearts', name:'Heart Frame', category:'Decorative', tags:['heart','love'], transform:(text)=>surround(text,'♡ ',' ♡') },
-  { id:'dots', name:'Dot Separated', category:'Decorative', tags:['dots','separator'], transform:(text)=>[...text].map(ch=>ch===' ' ? '   ' : ch).join('·') }
+  { id:'dots', name:'Dot Separated', category:'Decorative', tags:['dots','separator'], transform:(text)=>[...text].map(ch=>ch===' ' ? '   ' : ch).join('·') },
+  { id:'bullet-separated', name:'Bullet Separated', category:'Decorative', tags:['bullet','separator'], transform:(text)=>[...text].map(ch=>ch===' ' ? '   ' : ch).join('•') },
+  { id:'diamond-separated', name:'Diamond Separated', category:'Decorative', tags:['diamond','separator'], transform:(text)=>[...text].map(ch=>ch===' ' ? '   ' : ch).join('◇') },
+  { id:'dash-separated', name:'Dash Separated', category:'Decorative', tags:['dash','separator'], transform:(text)=>[...text].map(ch=>ch===' ' ? '   ' : ch).join('—') },
+  { id:'wave-separated', name:'Wave Separated', category:'Decorative', tags:['wave','separator'], transform:(text)=>[...text].map(ch=>ch===' ' ? '   ' : ch).join('〜') },
+  { id:'curly-frame', name:'Curly Frame', category:'Decorative', tags:['curly','frame'], transform:(text)=>surround(text,'❴ ',' ❵') },
+  { id:'double-angle-frame', name:'Double Angle Frame', category:'Decorative', tags:['angle','frame'], transform:(text)=>surround(text,'《 ',' 》') },
+  { id:'corner-frame', name:'Corner Frame', category:'Decorative', tags:['corner','frame'], transform:(text)=>surround(text,'「 ',' 」') },
+  { id:'white-corner-frame', name:'White Corner Frame', category:'Decorative', tags:['corner','frame'], transform:(text)=>surround(text,'『 ',' 』') },
+  { id:'flower-frame', name:'Flower Frame', category:'Decorative', tags:['flower','cute'], transform:(text)=>surround(text,'✿ ',' ✿') },
+  { id:'arrow-frame', name:'Arrow Frame', category:'Decorative', tags:['arrow','frame'], transform:(text)=>surround(text,'➜ ',' ➜') },
+  { id:'music-frame', name:'Music Frame', category:'Decorative', tags:['music','notes'], transform:(text)=>surround(text,'♫ ',' ♫') },
+  { id:'crown-frame', name:'Crown Frame', category:'Decorative', tags:['crown','royal'], transform:(text)=>surround(text,'♛ ',' ♛') },
+  { id:'script-spaced', name:'Spaced Script', category:'Cursive Effects', tags:['cursive','spacing'], transform:(text)=>spaced(mapped(text,baseStyles.script),' ') },
+  { id:'bold-script-spaced', name:'Spaced Bold Script', category:'Cursive Effects', tags:['cursive','bold','spacing'], transform:(text)=>spaced(mapped(text,baseStyles.boldScript),' ') },
+  { id:'italic-spaced', name:'Spaced Italic', category:'Cursive Effects', tags:['italic','spacing'], transform:(text)=>spaced(mapped(text,baseStyles.italic),' ') }
 ];
 
 export function convert(text, style) {
