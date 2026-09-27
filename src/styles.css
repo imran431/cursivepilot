@@ -301,3 +301,14 @@ details p { color: var(--ink-soft); }
   .style-result { grid-template-columns:1fr; }
   .style-actions { justify-content:flex-start; }
 }
+
+.filter-actions { display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
+.style-toolbar select, .style-toolbar input[type="text"] { min-height:46px; }
+.empty-state { display:grid; gap:4px; }
+.empty-state strong { color:var(--ink); }
+[data-compat-style] { min-height:46px; }
+[data-compatibility-lab] .compat-output:empty::before { content:"Preview will appear here"; color:#7b8781; }
+@media (max-width: 900px) {
+  .style-toolbar { grid-template-columns:1fr 1fr; }
+  .filter-actions { grid-column:1 / -1; justify-content:flex-start; }
+}
