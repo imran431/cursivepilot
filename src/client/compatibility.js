@@ -16,19 +16,18 @@ if (root) {
 
   styleSelect.innerHTML = '';
   let lastCategory = '';
+  let currentGroup = null;
   for (const style of ordered) {
     if (style.category !== lastCategory) {
-      const group = document.createElement('optgroup');
-      group.label = style.category;
-      group.dataset.group = style.category;
-      styleSelect.append(group);
+      currentGroup = document.createElement('optgroup');
+      currentGroup.label = style.category;
+      styleSelect.append(currentGroup);
       lastCategory = style.category;
     }
-    const group = styleSelect.querySelector(`optgroup[data-group="${CSS.escape(style.category)}"]`);
     const option = document.createElement('option');
     option.value = style.id;
     option.textContent = style.name;
-    group.append(option);
+    currentGroup.append(option);
   }
 
   styleSelect.value = styleDefs.some((s)=>s.id==='script') ? 'script' : styleDefs[0]?.id || '';
