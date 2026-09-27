@@ -1,5 +1,5 @@
-import { copyText, setStatus, track } from './common.js';
-import { convert, styleDefs } from './unicode.js';
+import { copyText, setStatus, track } from './common.js?v=20260927-3';
+import { convert, styleDefs } from './unicode.js?v=20260927-3';
 
 const root = document.querySelector('[data-compatibility-lab]');
 if (root) {
@@ -10,19 +10,33 @@ if (root) {
   const status = root.querySelector('[data-status]');
   const previews = [...root.querySelectorAll('[data-preview-text]')];
 
-  styleDefs
-    .filter((style) => ['script','bold-script','italic','bold-italic','sans-italic','fraktur','double'].includes(style.id))
-    .forEach((style) => {
-      const option = document.createElement('option');
-      option.value = style.id;
-      option.textContent = style.name;
-      styleSelect.append(option);
-    });
+  const ordered = [...styleDefs].sort((a,b) =>
+    a.category.localeCompare(b.category) || a.name.localeCompare(b.name)
+  );
+
+  styleSelect.innerHTML = '';
+  let lastCategory = '';
+  for (const style of ordered) {
+    if (style.category !== lastCategory) {
+      const group = document.createElement('optgroup');
+      group.label = style.category;
+      group.dataset.group = style.category;
+      styleSelect.append(group);
+      lastCategory = style.category;
+    }
+    const group = styleSelect.querySelector(`optgroup[data-group="${CSS.escape(style.category)}"]`);
+    const option = document.createElement('option');
+    option.value = style.id;
+    option.textContent = style.name;
+    group.append(option);
+  }
+
+  styleSelect.value = styleDefs.some((s)=>s.id==='script') ? 'script' : styleDefs[0]?.id || '';
 
   function render() {
     const style = styleDefs.find((item) => item.id === styleSelect.value) || styleDefs[0];
     const value = input.value.slice(0, 180) || 'CursivePilot test';
-    const converted = convert(value, style);
+    const converted = style ? convert(value, style) : value;
     output.textContent = converted;
     previews.forEach((node) => { node.textContent = converted; });
   }
@@ -36,5 +50,5 @@ if (root) {
   });
 
   render();
-  track('tool_view', { tool: 'compatibility_lab' });
+  track('tool_view', { tool: 'compatibility_lab', styles: styleDefs.length });
 }
