@@ -49,32 +49,71 @@ export function drawPaper(ctx, width, height, style = 'notebook', lineHeight = 4
   ctx.restore();
 }
 
+function graphemes(value) {
+  const text = String(value);
+  if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+    return [...new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(text)]
+      .map((part) => part.segment);
+  }
+  return [...text];
+}
+
+export function measureTextWidth(ctx, value) {
+  const metrics = ctx.measureText(String(value));
+  const visualWidth = (metrics.actualBoundingBoxLeft || 0) + (metrics.actualBoundingBoxRight || 0);
+  return Math.max(metrics.width || 0, visualWidth || 0);
+}
+
+function splitOverwideToken(ctx, token, maxWidth) {
+  const parts = [];
+  let current = '';
+  for (const char of graphemes(token)) {
+    const test = current + char;
+    if (current && measureTextWidth(ctx, test) > maxWidth) {
+      parts.push(current);
+      current = char;
+    } else {
+      current = test;
+    }
+  }
+  if (current) parts.push(current);
+  return parts.length ? parts : [''];
+}
+
 function wrapParagraph(ctx, paragraph, maxWidth) {
-  if (!paragraph.trim()) return [''];
-  const words = paragraph.trim().split(/\s+/);
+  if (paragraph === '') return [''];
+  const words = paragraph.trim().split(/\s+/).filter(Boolean);
   const lines = [];
   let line = '';
+
   for (const word of words) {
+    if (measureTextWidth(ctx, word) > maxWidth) {
+      if (line) {
+        lines.push(line);
+        line = '';
+      }
+      const parts = splitOverwideToken(ctx, word, maxWidth);
+      lines.push(...parts.slice(0, -1));
+      line = parts[parts.length - 1] || '';
+      continue;
+    }
     const test = line ? `${line} ${word}` : word;
-    if (ctx.measureText(test).width > maxWidth && line) {
+    if (line && measureTextWidth(ctx, test) > maxWidth) {
       lines.push(line);
       line = word;
     } else {
       line = test;
     }
   }
-  if (line) lines.push(line);
+  if (line || !lines.length) lines.push(line);
   return lines;
 }
 
 export function wrapText(ctx, text, maxWidth) {
-  const lines = [];
-  const paragraphs = String(text).replace(/\r/g, '').split('\n');
-  paragraphs.forEach((paragraph, index) => {
-    lines.push(...wrapParagraph(ctx, paragraph, maxWidth));
-    if (index < paragraphs.length - 1) lines.push('');
-  });
-  return lines;
+  return String(text)
+    .replace(/\r/g, '')
+    .split('\n')
+    .flatMap((paragraph) => wrapParagraph(ctx, paragraph, maxWidth));
 }
 
 function drawNaturalLine(ctx, line, x, y, options, random) {
@@ -83,19 +122,23 @@ function drawNaturalLine(ctx, line, x, y, options, random) {
   ctx.fillStyle = ink;
   ctx.textBaseline = 'alphabetic';
 
-  for (const char of [...line]) {
-    const width = ctx.measureText(char).width;
+  for (const run of line.match(/\s+|\S+/g) || []) {
+    const width = ctx.measureText(run).width;
+    if (/^\s+$/.test(run)) {
+      cursor += width;
+      continue;
+    }
     const jitterX = (random() - .5) * 1.5 * variation;
     const jitterY = (random() - .5) * 3.2 * variation;
-    const angle = (random() - .5) * 0.026 * variation;
-    const alpha = 0.88 + random() * .12;
+    const angle = (random() - .5) * 0.018 * variation;
+    const alpha = 0.9 + random() * .1;
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.translate(cursor + jitterX, y + jitterY);
     ctx.rotate(angle);
-    ctx.fillText(char, 0, 0);
+    ctx.fillText(run, 0, 0);
     ctx.restore();
-    cursor += width + (char === ' ' ? 1.5 : .15);
+    cursor += width;
   }
 }
 
@@ -109,7 +152,7 @@ export function renderHandwritingPages({
   pageSize = 'a4',
   variation = .45,
   margin = 78,
-  maxPages = 12,
+  maxPages = 48,
 }) {
   const size = PAGE_SIZES[pageSize] || PAGE_SIZES.a4;
   const probe = createCanvas(size.width, size.height);
@@ -118,10 +161,12 @@ export function renderHandwritingPages({
   const lines = wrapText(probeCtx, text, size.width - margin * 2);
   const linesPerPage = Math.max(1, Math.floor((size.height - margin * 2) / lineHeight));
   const pages = [];
+  const totalPages = Math.ceil(lines.length / linesPerPage) || 1;
+  const renderedPages = Math.min(maxPages, totalPages);
   const seed = hashString(`${text}|${fontFamily}|${fontSize}|${variation}`);
   const random = seededRandom(seed);
 
-  for (let pageIndex = 0; pageIndex < Math.min(maxPages, Math.ceil(lines.length / linesPerPage) || 1); pageIndex += 1) {
+  for (let pageIndex = 0; pageIndex < renderedPages; pageIndex += 1) {
     const canvas = createCanvas(size.width, size.height);
     const ctx = canvas.getContext('2d');
     drawPaper(ctx, size.width, size.height, paper, lineHeight, margin);
@@ -136,6 +181,9 @@ export function renderHandwritingPages({
     }
     pages.push(canvas);
   }
+  pages.totalPages = totalPages;
+  pages.truncated = totalPages > renderedPages;
+  pages.maxPages = maxPages;
   return pages;
 }
 

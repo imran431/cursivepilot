@@ -71,6 +71,25 @@ if (sitemap.includes('/thanks/')) errors.push('sitemap.xml must not include noin
 if (sitemap.includes('<lastmod>')) warnings.push('sitemap includes lastmod; keep it only if dates are accurate.');
 
 const unicode = await readFile(path.join(root,'src','client','unicode.js'),'utf8');
+const canvasEngine = await readFile(path.join(root,'src','client','canvas-engine.js'),'utf8');
+const calligraphySource = await readFile(path.join(root,'src','client','calligraphy.js'),'utf8');
+const handwritingSource = await readFile(path.join(root,'src','client','handwriting.js'),'utf8');
+const worksheetSource = await readFile(path.join(root,'src','client','worksheet.js'),'utf8');
+const compatibilitySource = await readFile(path.join(root,'src','client','compatibility.js'),'utf8');
+const templateSource = await readFile(path.join(root,'src','template.mjs'),'utf8');
+const packageSource = await readFile(path.join(root,'package.json'),'utf8');
+
+if (/\.slice\(0,\s*5\)/.test(calligraphySource)) errors.push('calligraphy.js must not cap wrapped output at five lines');
+if (!calligraphySource.includes('MAX_HEIGHT') || !calligraphySource.includes('No input has been discarded')) errors.push('calligraphy.js missing explicit overflow handling');
+if (/maxPages\s*=\s*12/.test(canvasEngine)) errors.push('handwriting still contains the old silent 12-page cap');
+if (!handwritingSource.includes('data-page-indicator') || !handwritingSource.includes('pages.truncated')) errors.push('handwriting multi-page navigation/overflow handling missing');
+if (/text\.value\.slice\(0,\s*6000\)/.test(handwritingSource)) errors.push('handwriting.js must not silently slice accepted textarea input');
+if (/chunks\.slice\(0,\s*12\)/.test(worksheetSource)) errors.push('worksheet.js must not silently cap generated worksheet pages');
+if (!worksheetSource.includes("mode === 'copy'") || !worksheetSource.includes('modelBaseline')) errors.push('worksheet copy mode selected-font model missing');
+if (compatibilitySource.includes('?v=20260927-3')) errors.push('compatibility.js contains stale nested cache version');
+if (!templateSource.includes('v=20261002-1')) errors.push('frontend cache version not updated for consolidated QA fix');
+if (packageSource.includes('Supabase')) errors.push('package metadata still references removed Supabase backend');
+
 for (const label of ['script','bold-script','fraktur','double','sans','mono','fullwidth','circled']) {
   if (!unicode.includes(`id:'${label}'`) && !unicode.includes(`id: '${label}'`)) {
     errors.push(`unicode.js missing style ${label}`);

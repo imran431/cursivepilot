@@ -92,9 +92,10 @@ function renderWorksheetPages({
   const contentWidth = size.width - marginX * 2;
   const rowHeight = 48;
   const rowGap = 5;
-  const labelHeight = 30;
+  const labelHeight = 28;
+  const modelHeight = mode === 'copy' ? 56 : 0;
   const blockGap = 18;
-  const blockHeight = labelHeight + rowsPerItem * (rowHeight + rowGap) + blockGap;
+  const blockHeight = labelHeight + modelHeight + rowsPerItem * (rowHeight + rowGap) + blockGap;
   const contentTop = 128;
   const contentBottom = size.height - 48;
   const usableHeight = contentBottom - contentTop;
@@ -106,7 +107,7 @@ function renderWorksheetPages({
     chunks.push(safePhrases.slice(i, i + itemsPerPage));
   }
 
-  chunks.slice(0, 12).forEach((chunk, pageIndex) => {
+  chunks.forEach((chunk, pageIndex) => {
     const canvas = createCanvas(size.width, size.height);
     const ctx = canvas.getContext('2d');
 
@@ -139,8 +140,16 @@ function renderWorksheetPages({
       ctx.font = `${phraseFontSize}px "${fontFamily}", "Segoe Script", cursive`;
       ctx.textBaseline = 'alphabetic';
 
+      if (mode === 'copy') {
+        ctx.fillStyle = '#1f5c4d';
+        const modelMetrics = ctx.measureText(phrase || 'Mg');
+        const modelDescent = modelMetrics.actualBoundingBoxDescent || phraseFontSize * 0.22;
+        const modelBaseline = y + labelHeight + modelHeight - modelDescent - 8;
+        ctx.fillText(phrase, marginX + 8, modelBaseline, contentWidth - 16);
+      }
+
       for (let rowIndex = 0; rowIndex < rowsPerItem; rowIndex += 1) {
-        const rowY = y + labelHeight + rowIndex * (rowHeight + rowGap);
+        const rowY = y + labelHeight + modelHeight + rowIndex * (rowHeight + rowGap);
         const { base } = drawGuides(ctx, marginX, rowY, contentWidth, rowHeight);
 
         const shouldTrace =
@@ -232,11 +241,12 @@ if (root) {
     populateFonts();
     await loadFont(font.value, 42);
 
-    const phrases = text.value
+    const allPhrases = text.value
       .split('\n')
       .map((value) => value.trim())
-      .filter(Boolean)
-      .slice(0, 24);
+      .filter(Boolean);
+    const phrases = allPhrases.slice(0, 24);
+    const tooManyItems = allPhrases.length > 24;
 
     currentPhraseCount = phrases.length || 1;
 
@@ -254,7 +264,11 @@ if (root) {
 
     if (currentPage >= pages.length) currentPage = pages.length - 1;
     showPage(Math.max(0, currentPage));
-    setStatus(status, 'Worksheet preview updated.', 'success');
+    if (tooManyItems) {
+      setStatus(status, `This worksheet supports up to 24 practice items. ${allPhrases.length - 24} extra item${allPhrases.length - 24 === 1 ? '' : 's'} were not added.`, 'error');
+    } else {
+      setStatus(status, 'Worksheet preview updated.', 'success');
+    }
   }
 
   const rerender = debounce(render, 120);

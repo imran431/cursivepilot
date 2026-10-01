@@ -1,5 +1,5 @@
-import { copyText, setStatus, track } from './common.js?v=20260927-3';
-import { convert, styleDefs } from './unicode.js?v=20260927-3';
+import { copyText, setStatus, track } from './common.js';
+import { convert, styleDefs } from './unicode.js';
 
 const root = document.querySelector('[data-compatibility-lab]');
 if (root) {
