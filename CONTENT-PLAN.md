@@ -1,85 +1,42 @@
-# Content and SEO Page Map
+# CursivePilot SEO URL and Content Plan
 
-## Launch pages
+## Stable URL rule
 
-### `/cursive-generator/`
-Primary intent: cursive generator.
+The existing public slugs below are treated as stable before Google Search Console submission. Do not rename them for small keyword gains. If a slug ever must change, use a permanent 301 redirect and update internal links, canonicals and the sitemap together.
 
-Natural secondary language: cursive font generator, cursive text generator, cursive copy and paste, cursive translator, cursive maker, generate cursive.
+## Keyword ownership
 
-Distinctive content:
-- live copyable Unicode results
-- explanation of Unicode vs real font/image
-- compatibility/accessibility guidance
-- links to handwriting image output when exact appearance is needed
+| URL | Primary intent | Important secondary intent |
+| --- | --- | --- |
+| `/` | CursivePilot brand + writing tool suite | cursive tools, handwriting tools, calligraphy tools |
+| `/cursive-generator/` | cursive generator | cursive font generator, cursive text generator, cursive translator, copy-and-paste cursive |
+| `/handwriting-generator/` | handwriting generator | text to handwriting, text to handwriting converter, handwritten text generator, cursive writing generator |
+| `/calligraphy-generator/` | calligraphy generator | calligraphy text generator, text to calligraphy |
+| `/signature-generator/` | cursive signature generator | cursive name generator, signature generator, signature-style PNG |
+| `/handwriting-worksheet-generator/` | handwriting worksheet generator | cursive handwriting worksheet generator, handwriting practice worksheet |
+| `/cursive-alphabet/` | cursive alphabet | cursive letters A–Z, uppercase cursive, lowercase cursive |
+| `/cursive-text-compatibility/` | cursive text compatibility | Unicode cursive compatibility, copy/paste testing |
+| `/guides/unicode-cursive-vs-fonts/` | Unicode cursive vs script fonts | cursive font vs Unicode text |
+| `/guides/how-to-practice-cursive/` | how to practice cursive | cursive practice, printable handwriting practice |
 
-### `/handwriting-generator/`
-Primary intent: handwriting generator / text to handwriting.
+## Avoid same-intent doorway pages
 
-Distinctive content:
-- multi-page canvas rendering
-- paper, ink, spacing and variation controls
-- PNG export and browser Print/Save PDF
-- explicit statement that the starter does not clone an individual person's handwriting
+Do not create separate thin URLs such as:
+- `/free-cursive-generator/`
+- `/cursive-generator-online/`
+- `/cursive-font-generator/`
+- `/cursive-text-generator/`
+- `/text-to-handwriting/`
+- `/calligraphy-text-generator/`
+- `/cursive-handwriting-worksheet-generator/`
 
-### `/calligraphy-generator/`
-Primary intent: calligraphy generator.
+Those phrases are already owned by the canonical tool pages above.
 
-Distinctive content:
-- real script-font image rendering
-- color/size controls
-- transparent PNG
-- explanation of why visual calligraphy is different from copyable Unicode
+## Good future pages only when the feature is distinct
 
-### `/signature-generator/`
-Primary intent: cursive signature generator / cursive name generator.
+- A dedicated name-tracing worksheet page if we add name-specific repetition, sizing and tracing controls.
+- A cursive writing image generator if it becomes materially different from the general handwriting page.
+- A custom-handwriting generator only if a genuine handwriting-learning/model feature is built.
+- Platform-specific compatibility pages only after direct testing produces original evidence worth publishing.
 
-Distinctive content:
-- name comparison across a small curated set of styles
-- transparent PNG
-- underline flourish
-- clear legal/identity limitation
-
-### `/handwriting-worksheet-generator/`
-Primary intent: handwriting worksheet generator / cursive worksheet generator.
-
-Distinctive content:
-- user-defined phrases
-- trace, copy, mixed modes
-- cursive/print selection
-- A4/Letter
-- multipage Print/Save PDF
-
-### `/cursive-alphabet/`
-Primary intent: cursive alphabet reference.
-
-Role: topical support + internal link to actual practice tools. Avoid pretending one digital typeface is the only “correct” school cursive method.
-
-## Supporting guides
-
-### `/guides/unicode-cursive-vs-fonts/`
-A citation-worthy technical explainer answering a frequent source of confusion in this niche.
-
-### `/guides/how-to-practice-cursive/`
-Supports worksheet intent with practical usage guidance. It should remain educational and avoid health/therapy claims.
-
-## Phase-two pages only after launch data supports them
-
-- Cursive tattoo lettering preview: only if we add an actual tattoo/design-specific preview and not just a cloned cursive page.
-- Name tracing worksheets: only if we add name-specific repetition controls and printable formats.
-- Social platform preview: only if we build real previews/compatibility testing.
-- Custom handwriting: only if an actual ML/model pipeline is introduced and the product can accurately describe what is learned/generated.
-
-## Internal linking logic
-
-- Cursive -> handwriting for exact visual output.
-- Cursive -> signature for names.
-- Handwriting -> worksheets for practice.
-- Calligraphy -> cursive for copyable text.
-- Signature -> calligraphy for decorative design.
-- Alphabet -> worksheets for practice.
-- Guides link back to the relevant tool, not to every page on the site.
-
-## Ad landing-page rule
-
-Never use one generic landing page for unrelated keyword themes. Match the query to the exact tool. Keep the user able to try the tool without signup or popup friction.
+Adding genuinely new pages after Search Console submission is normal. The important rule is to keep existing slugs stable and avoid near-duplicate pages created only for keyword variations.

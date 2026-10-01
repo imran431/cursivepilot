@@ -8,8 +8,9 @@ import { site } from '../src/config.mjs';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..');
 const dist = path.join(root, 'dist');
-const rawBase = process.env.SITE_URL || process.env.URL || 'http://localhost:8888';
+const rawBase = process.env.SITE_URL || 'https://cursivepilotv.netlify.app';
 const baseUrl = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const isNonProductionDeploy = Boolean(process.env.CONTEXT && process.env.CONTEXT !== 'production');
 
 const targetFor = (route) => route === '/'
   ? path.join(dist, 'index.html')
@@ -33,7 +34,7 @@ await copyIfExists(path.join(root, 'public'), dist);
 for (const page of pages) {
   const target = targetFor(page.path);
   await mkdir(path.dirname(target), { recursive: true });
-  await writeFile(target, renderPage({ baseUrl, ...page }), 'utf8');
+  await writeFile(target, renderPage({ baseUrl, ...page, noindex: Boolean(page.noindex || isNonProductionDeploy) }), 'utf8');
 }
 
 const notFound = renderPage({
